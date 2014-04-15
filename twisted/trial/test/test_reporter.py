@@ -8,7 +8,8 @@ Tests for L{twisted.trial.reporter}.
 """
 from __future__ import division
 
-import errno, sys, os, re, StringIO
+import errno, sys, os, re
+from io import StringIO
 from inspect import getmro
 
 from twisted.internet.utils import suppressWarnings
