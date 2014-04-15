@@ -75,7 +75,7 @@ class TestTestResult(unittest.SynchronousTestCase):
         # pyunit passes an exc_info tuple directly to addError
         try:
             raise RuntimeError('foo')
-        except RuntimeError, excValue:
+        except RuntimeError as excValue:
             self.result.addError(self, sys.exc_info())
         failure = self.result.errors[0][1]
         self.assertEqual(excValue, failure.value)
@@ -85,7 +85,7 @@ class TestTestResult(unittest.SynchronousTestCase):
         # pyunit passes an exc_info tuple directly to addFailure
         try:
             raise self.failureException('foo')
-        except self.failureException, excValue:
+        except self.failureException as excValue:
             self.result.addFailure(self, sys.exc_info())
         failure = self.result.failures[0][1]
         self.assertEqual(excValue, failure.value)
@@ -583,7 +583,7 @@ class TestSkip(unittest.SynchronousTestCase):
         """
         try:
             1/0
-        except Exception, e:
+        except Exception as e:
             error = e
         self.result.addSkip(self.test, error)
         self.result.done()
@@ -708,7 +708,7 @@ class TodoTest(unittest.SynchronousTestCase):
         """
         try:
             1/0
-        except Exception, e:
+        except Exception as e:
             error = e
         self.result.addExpectedFailure(self.test, Failure(error),
                                        makeTodo("todo!"))
