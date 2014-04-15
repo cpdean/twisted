@@ -207,6 +207,7 @@ testModules = [
     "twisted.trial.test.test_asyncassertions",
     "twisted.trial.test.test_deferred",
     "twisted.trial.test.test_pyunitcompat",
+    "twisted.trial.test.test_reporter",
     "twisted.trial.test.test_suppression",
     "twisted.trial.test.test_testcase",
     "twisted.trial.test.test_tests",
