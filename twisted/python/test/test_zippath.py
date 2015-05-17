@@ -35,10 +35,10 @@ class ZipFilePathTests(AbstractFilePathTests):
     """
     def setUp(self):
         AbstractFilePathTests.setUp(self)
-        zipit(self.cmn, self.cmn + '.zip')
-        self.path = ZipArchive(self.cmn + '.zip')
+        zipit(self.cmn, self.cmn + b'.zip')
+        self.path = ZipArchive(self.cmn + b'.zip')
         self.root = self.path
-        self.all = [x.replace(self.cmn, self.cmn + '.zip') for x in self.all]
+        self.all = [x.replace(self.cmn, self.cmn + b'.zip') for x in self.all]
 
 
     def test_zipPathRepr(self):
@@ -48,7 +48,7 @@ class ZipFilePathTests(AbstractFilePathTests):
         """
         child = self.path.child("foo")
         pathRepr = "ZipPath(%r)" % (
-            os.path.abspath(self.cmn + ".zip" + os.sep + 'foo'),)
+            os.path.abspath(self.cmn + b".zip" + os.sep + 'foo'),)
 
         # Check for an absolute path
         self.assertEqual(repr(child), pathRepr)
