@@ -5,6 +5,8 @@
 Test cases covering L{twisted.python.zippath}.
 """
 
+from __future__ import print_function, division, absolute_import
+
 import os, zipfile
 
 from twisted.test.test_paths import AbstractFilePathTests

@@ -2,6 +2,8 @@
 # Copyright (c) Twisted Matrix Laboratories.
 # See LICENSE for details.
 
+from __future__ import print_function, division, absolute_import
+
 """
 This module contains implementations of IFilePath for zip files.
 
