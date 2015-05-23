@@ -60,8 +60,13 @@ class ZipPath(AbstractFilePath):
         self.pathInArchive = pathInArchive
         # self.path pretends to be os-specific because that's the way the
         # 'zipimport' module does it.
-        self.path = os.path.join(archive.path,
-                *(os.path.split(self.pathInArchive)))
+        if len(self.pathInArchive) == 0:
+            self.path = archive.path
+        else:
+            self.path = os.path.join(
+                archive.path,
+                *(os.path.split(self.pathInArchive))
+            )
 
     def __cmp__(self, other):
         if not isinstance(other, ZipPath):
