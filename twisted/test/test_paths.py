@@ -74,6 +74,7 @@ class AbstractFilePathTests(BytesTestCase):
         f.close()
         f = self.subfile(b"sub3", b"file3.ext3")
         f.close()
+
         self.path = filepath.FilePath(cmn)
         self.root = filepath.FilePath(b"/")
 
@@ -89,9 +90,11 @@ class AbstractFilePathTests(BytesTestCase):
         """
         Verify that the segments between two paths are correctly identified.
         """
+        leaf = self.path.child(b"a").child(b"b").child(b"c")
         self.assertEqual(
-            self.path.child(b"a").child(b"b").child(b"c").segmentsFrom(self.path),
-            [b"a", b"b", b"c"])
+                leaf.segmentsFrom(self.path),
+                [b"a", b"b", b"c"]
+            )
 
 
     def test_segmentsFromNegative(self):

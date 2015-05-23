@@ -30,6 +30,7 @@ else:
 from twisted.python.filepath import IFilePath, FilePath, AbstractFilePath
 
 from zope.interface import implementer
+from twisted.python.compat import comparable, cmp
 
 # using FilePath here exclusively rather than os to make sure that we don't do
 # anything OS-path-specific here.
@@ -38,6 +39,7 @@ ZIP_PATH_SEP = '/'              # In zipfiles, "/" is universally used as the
                                 # path separator, regardless of platform.
 
 
+@comparable
 @implementer(IFilePath)
 class ZipPath(AbstractFilePath):
     """
@@ -70,16 +72,16 @@ class ZipPath(AbstractFilePath):
 
     def __repr__(self):
         parts = [os.path.abspath(self.archive.path)]
-        parts.extend(self.pathInArchive.split(ZIP_PATH_SEP))
-        path = os.sep.join(parts)
-        return "ZipPath('%s')" % (path.encode('string-escape'),)
+        parts.extend(os.path.split(self.pathInArchive))
+        path = os.path.join(parts)
+        return "ZipPath('%s')" % (path,)
 
 
     def parent(self):
-        splitup = self.pathInArchive.split(ZIP_PATH_SEP)
+        splitup = os.path.split(self.pathInArchive)
         if len(splitup) == 1:
             return self.archive
-        return ZipPath(self.archive, ZIP_PATH_SEP.join(splitup[:-1]))
+        return ZipPath(self.archive, os.path.join(*splitup[:-1]))
 
 
     def child(self, path):
@@ -135,7 +137,7 @@ class ZipPath(AbstractFilePath):
 
 
     def basename(self):
-        return self.pathInArchive.split(ZIP_PATH_SEP)[-1]
+        return os.path.split(self.pathInArchive)[-1]
 
     def dirname(self):
         # XXX NOTE: This API isn't a very good idea on filepath, but it's even
@@ -210,7 +212,7 @@ class ZipArchive(ZipPath):
         else:
             self.zipfile = ChunkingZipFile(FilePath(archivePathname).asTextMode().open())
         self.path = archivePathname
-        self.pathInArchive = ''
+        self.pathInArchive = b''
         # zipfile is already wasting O(N) memory on cached ZipInfo instances,
         # so there's no sense in trying to do this lazily or intelligently
         self.childmap = {}      # map parent: list of children
