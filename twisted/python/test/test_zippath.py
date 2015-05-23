@@ -8,21 +8,41 @@ Test cases covering L{twisted.python.zippath}.
 from __future__ import print_function, division, absolute_import
 
 import os, zipfile
+import shutil
 
 from twisted.test.test_paths import AbstractFilePathTests
 from twisted.python.zippath import ZipArchive
+from twisted.python.filepath import FilePath
+
+
+def _zipit(dirname, zfname):
+    """
+    Create a zipfile on zfname, containing the contents of dirname'
+    """
+    z = FilePath(zfname).asTextMode().open("w")
+    shutil.make_archive(z.name, "zip", dirname)
 
 
 def zipit(dirname, zfname):
     """
     Create a zipfile on zfname, containing the contents of dirname'
     """
-    zf = zipfile.ZipFile(zfname, "w")
+
+    def path_wrapper(p, mode=None):
+        # need to avoid fs specific filepath encoding rules
+        if mode:
+            with FilePath(p).asTextMode().open(mode) as f:
+                return f.name
+        else:
+            with FilePath(p).asTextMode().open() as f:
+                return f.name
+
+    file_obj = path_wrapper(zfname, "w")
+    zf = zipfile.ZipFile(file_obj, "w")
     for root, ignored, files, in os.walk(dirname):
         for fname in files:
-            fspath = os.path.join(root, fname)
-            arcpath = os.path.join(root, fname)[len(dirname)+1:]
-            # print fspath, '=>', arcpath
+            fspath = path_wrapper(os.path.join(root, fname))
+            arcpath = fspath[len(dirname)+1:]
             zf.write(fspath, arcpath)
     zf.close()
 

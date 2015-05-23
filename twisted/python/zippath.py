@@ -58,8 +58,8 @@ class ZipPath(AbstractFilePath):
         self.pathInArchive = pathInArchive
         # self.path pretends to be os-specific because that's the way the
         # 'zipimport' module does it.
-        self.path = os.path.join(archive.zipfile.filename,
-                                 *(self.pathInArchive.split(ZIP_PATH_SEP)))
+        self.path = os.path.join(archive.path,
+                *(os.path.split(self.pathInArchive)))
 
     def __cmp__(self, other):
         if not isinstance(other, ZipPath):
@@ -94,7 +94,7 @@ class ZipPath(AbstractFilePath):
             it) as this means it may include special names with special
             meaning outside of the context of a zip archive.
         """
-        return ZipPath(self.archive, ZIP_PATH_SEP.join([self.pathInArchive, path]))
+        return ZipPath(self.archive, os.path.join(self.pathInArchive, path))
 
 
     def sibling(self, path):
@@ -206,9 +206,9 @@ class ZipArchive(ZipPath):
         @param archivePathname: a str, naming a path in the filesystem.
         """
         if _USE_ZIPFILE:
-            self.zipfile = ZipFile(archivePathname)
+            self.zipfile = ZipFile(FilePath(archivePathname).asTextMode().open())
         else:
-            self.zipfile = ChunkingZipFile(archivePathname)
+            self.zipfile = ChunkingZipFile(FilePath(archivePathname).asTextMode().open())
         self.path = archivePathname
         self.pathInArchive = ''
         # zipfile is already wasting O(N) memory on cached ZipInfo instances,
@@ -216,7 +216,7 @@ class ZipArchive(ZipPath):
         self.childmap = {}      # map parent: list of children
 
         for name in self.zipfile.namelist():
-            name = name.split(ZIP_PATH_SEP)
+            name = os.path.split(name)
             for x in range(len(name)):
                 child = name[-x]
                 parent = ZIP_PATH_SEP.join(name[:-x])
