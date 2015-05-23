@@ -88,9 +88,11 @@ class ZipFilePathTests(AbstractFilePathTests):
         includes the C{".."} rather than applying the usual parent directory
         meaning.
         """
-        child = self.path.child("foo").child("..").child("bar")
+        child = self.path.child(b"foo").child(b"..").child(b"bar")
         pathRepr = "ZipPath(%r)" % (
-            self.cmn + ".zip" + os.sep.join(["", "foo", "..", "bar"]))
+                os.path.join(
+                self.cmn + b".zip",
+                b"foo", b"..", b"bar"))
         self.assertEqual(repr(child), pathRepr)
 
 

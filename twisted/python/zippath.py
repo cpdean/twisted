@@ -73,8 +73,8 @@ class ZipPath(AbstractFilePath):
     def __repr__(self):
         parts = [os.path.abspath(self.archive.path)]
         parts.extend(os.path.split(self.pathInArchive))
-        path = os.path.join(parts)
-        return "ZipPath('%s')" % (path,)
+        path = os.path.join(*parts)
+        return "ZipPath(%r)" % (path,)
 
 
     def parent(self):
