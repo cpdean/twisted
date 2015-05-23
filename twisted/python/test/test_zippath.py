@@ -101,9 +101,9 @@ class ZipFilePathTests(AbstractFilePathTests):
         Bytes in the ZipPath path which have special meaning in Python
         string literals are escaped in the ZipPath repr.
         """
-        child = self.path.child("'")
-        path = self.cmn + ".zip" + os.sep.join(["", "'"])
-        pathRepr = "ZipPath('%s')" % (path.encode('string-escape'),)
+        child = self.path.child(b"'")
+        path = os.path.join(self.cmn + b".zip", b"'")
+        pathRepr = "ZipPath(%r)" % (path,)
         self.assertEqual(repr(child), pathRepr)
 
 
