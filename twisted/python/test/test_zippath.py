@@ -88,11 +88,9 @@ class ZipFilePathTests(AbstractFilePathTests):
         includes the C{".."} rather than applying the usual parent directory
         meaning.
         """
-        child = self.path.child(b"foo").child(b"..").child(b"bar")
+        child = self.path.child("foo").child("..").child("bar")
         pathRepr = "ZipPath(%r)" % (
-                os.path.join(
-                self.cmn + b".zip",
-                b"foo", b"..", b"bar"))
+            self.cmn + ".zip" + os.sep.join(["", "foo", "..", "bar"]))
         self.assertEqual(repr(child), pathRepr)
 
 
@@ -101,9 +99,9 @@ class ZipFilePathTests(AbstractFilePathTests):
         Bytes in the ZipPath path which have special meaning in Python
         string literals are escaped in the ZipPath repr.
         """
-        child = self.path.child(b"'")
-        path = os.path.join(self.cmn + b".zip", b"'")
-        pathRepr = "ZipPath(%r)" % (path,)
+        child = self.path.child("'")
+        path = self.cmn + ".zip" + os.sep.join(["", "'"])
+        pathRepr = "ZipPath('%s')" % (path.encode('string-escape'),)
         self.assertEqual(repr(child), pathRepr)
 
 
