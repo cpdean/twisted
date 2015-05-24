@@ -121,3 +121,7 @@ class ZipFilePathTests(AbstractFilePathTests):
 
         # Check using a path without the cwd prepended
         self.assertEqual(repr(relpath), pathRepr)
+
+
+    def test_zipFileIsADir(self):
+        self.assertTrue(self.path.isdir())
